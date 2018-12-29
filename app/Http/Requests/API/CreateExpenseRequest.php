@@ -3,6 +3,8 @@
 namespace App\Http\Requests\API;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateExpenseRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class CreateExpenseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +26,14 @@ class CreateExpenseRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string',
+            'sum' => 'required|numeric'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json(['status' => false, 'message' => $validator->errors()], 422));
     }
 }

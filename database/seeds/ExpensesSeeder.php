@@ -14,7 +14,8 @@ class ExpensesSeeder extends Seeder
         for ($i = 0; $i < 15; $i++) {
             \App\Models\Expense::create([
                 'category_id' => rand(1, 5),
-                'sum' => random_int(10000, 30000)
+                'description' => 'Some description...',
+                'sum' => round(random_int(10000, 30000) + mt_rand() / mt_getrandmax(), 4)
             ]);
         }
     }
