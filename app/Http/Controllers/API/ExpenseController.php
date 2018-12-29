@@ -34,6 +34,7 @@ class ExpenseController extends Controller
     public function index(IndexExpenseRequest $request)
     {
         $data = $this->model->getModel()->orderBy('created_at', 'DESC')
+            ->where('category_id', $request->category_id)
             ->with('category')
             ->whereBetween('created_at', [$request->from, $request->to])
             ->get()

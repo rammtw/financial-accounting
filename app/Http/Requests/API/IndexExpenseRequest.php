@@ -26,6 +26,7 @@ class IndexExpenseRequest extends FormRequest
     public function rules()
     {
         return [
+            'category_id' => 'required|exists:categories,id',
             'from' => 'required|date',
             'to' => 'required|date'
         ];

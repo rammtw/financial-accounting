@@ -2,11 +2,26 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Category;
+use App\Repositories\Repository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
+    /**
+     * @var Repository
+     */
+    private $model;
+
+    /**
+     * ExpenseController constructor.
+     * @param Category $news
+     */
+    public function __construct(Category $news)
+    {
+        $this->model = new Repository($news);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +51,9 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = $this->model->show($id);
+
+        return response()->json(['status' => true, 'data' => $data]);
     }
 
     /**
