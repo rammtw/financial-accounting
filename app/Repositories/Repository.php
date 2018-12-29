@@ -41,19 +41,32 @@ class Repository implements RepositoryInterface
      * @param array $data
      * @param $id
      * @return mixed
+     * @throws \Exception
      */
     public function update(array $data, $id)
     {
         $record = $this->model->find($id);
+
+        if (!$record) {
+            throw new \Exception('row not found');
+        }
+
         return $record->update($data);
     }
 
     /**
      * @param $id
      * @return int
+     * @throws \Exception
      */
     public function delete($id)
     {
+        $record = $this->model->find($id);
+
+        if (!$record) {
+            throw new \Exception('row not found');
+        }
+
         return $this->model->destroy($id);
     }
 

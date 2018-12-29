@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateExpenseRequest;
+use App\Http\Requests\API\IndexExpenseRequest;
+use App\Http\Requests\API\UpdateExpenseRequest;
 use App\Models\Expense;
 use App\Repositories\Repository;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ExpenseController extends Controller
@@ -27,17 +28,24 @@ class ExpenseController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param IndexExpenseRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexExpenseRequest $request)
     {
+        $data = $this->model->getModel()->orderBy('created_at', 'DESC')
+            ->with('category')
+            ->whereBetween('created_at', [$request->from, $request->to])
+            ->get()
+            ->groupBy('category.name');
 
+        return response()->json(['status' => true, 'data' => $data]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param CreateExpenseRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateExpenseRequest $request)
@@ -61,13 +69,19 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param UpdateExpenseRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateExpenseRequest $request, $id)
     {
-        //
+        try {
+            $this->model->update($request->only('sum', 'category_id', 'description'), $id);
+
+            return response()->json(['status' => true]);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => false, 'message' => $exception->getMessage()], 422);
+        }
     }
 
     /**
@@ -78,6 +92,12 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $this->model->delete($id);
+
+            return response()->json(['status' => true]);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => false, 'message' => $exception->getMessage()], 422);
+        }
     }
 }
