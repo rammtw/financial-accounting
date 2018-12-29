@@ -44,3 +44,45 @@ DB_PASSWORD=secret
 ```
 php artisan migrate --seed
 ```
+
+### Endpoints
+
+##### [GET] /api/expense - Возможность выбора периода для получения данных по расходу за выбранной период с разбивкой по категориям 
+```
+{
+	"from": "2018-12-26 00:00:00",
+	"to": "2018-12-30 00:00:00",
+	"category_id": 1
+}
+```
+
+---
+
+##### [POST] /api/expense - Добавление статьи расхода 
+```
+{
+	"category_id": 1,
+	"description": "test desc",
+	"sum": 111
+}
+```
+
+---
+
+##### [PATCH] /api/expense/{id} - Редактирование статьи расхода 
+```
+{
+	"category_id": 1,
+	"description": "test desc",
+	"sum": 111
+}
+```
+
+---
+
+##### [DELETE] /api/expense/{id} - Удаление статьи расхода 
+
+---
+
+##### [GET] /api/category/{id} - Выбор категории расхода из справочника категорий 
+
