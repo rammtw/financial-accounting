@@ -1,11 +1,11 @@
 ### Настройка .env docker
 ```
+cd docker
 cp .env.example .env
 ```
 
 ### Запуск и остановка контейнеров
 ```
-cd docker
 $ sudo docker-compose up -d nginx postgres
 $ sudo docker-compose stop
 ```
@@ -44,6 +44,8 @@ DB_PASSWORD=secret
 ```
 php artisan migrate --seed
 ```
+
+Запуск проекта в браузере по адресу http://localhost:8085 
 
 ### Endpoints
 
